@@ -22,7 +22,7 @@ public class SQLiteHelper extends SQLiteOpenHelper{
     //This is the query for creating the two tables
     private  static final String[] SQL_CREATE_ENTRIES =
             {"CREATE TABLE IF NOT EXISTS " + AccountConst.AccountEntry.TABLE_NAME +
-                    " (" + AccountConst.AccountEntry.COLUMN_NAME_ACCOUNT_NO + " VARCHAR(20) PRIMARY KEY, " +
+                    " (" + AccountConst.AccountEntry.COLUMN_NAME_ACCOUNT_NO + " VARCHAR(20) PRIMARY KEY UNIQUE, " +
                     AccountConst.AccountEntry.COLUMN_NAME_ACCOUNT_HOLDER_NAME  + " VARCHAR(50) NOT NULL, " +
                     AccountConst.AccountEntry.COLUMN_NAME_BANK_NAME + " VARCHAR (50) NOT NULL, "+
                     AccountConst.AccountEntry.COLUMN_NAME_BALANCE + " DECIMAL(10,2) NOT NULL )" ,

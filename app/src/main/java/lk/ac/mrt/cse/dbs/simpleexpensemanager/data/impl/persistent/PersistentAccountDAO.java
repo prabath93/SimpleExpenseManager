@@ -1,10 +1,12 @@
 package lk.ac.mrt.cse.dbs.simpleexpensemanager.data.impl.persistent;
 
+import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +19,9 @@ import lk.ac.mrt.cse.dbs.simpleexpensemanager.data.model.ExpenseType;
 /**
  * Created by prabath s on 12/4/2015.
  */
-public class PersistentAccountDAO implements AccountDAO{
+
+//this class has been made serializable to avoid application crashing on home button
+public class PersistentAccountDAO implements AccountDAO,Serializable{
 
     private Context context;
     public PersistentAccountDAO(Context context)
@@ -105,14 +109,28 @@ public class PersistentAccountDAO implements AccountDAO{
 
         SQLiteHelper helper = SQLiteHelper.getInstance(context);
         SQLiteDatabase db = helper.getWritableDatabase();
+        List<String> account_numbers=getAccountNumbersList();
+        //this condition is checked to avoid duplicating the accounts
+        if(!account_numbers.contains(account.getAccountNo())){
+            ContentValues values = new ContentValues();
+            values.put(AccountConst.AccountEntry.COLUMN_NAME_ACCOUNT_NO,account.getAccountNo());
+            values.put(AccountConst.AccountEntry.COLUMN_NAME_ACCOUNT_HOLDER_NAME,account.getAccountHolderName());
+            values.put(AccountConst.AccountEntry.COLUMN_NAME_BANK_NAME,account.getBankName());
+            values.put(AccountConst.AccountEntry.COLUMN_NAME_BALANCE,account.getBalance());
 
-        ContentValues values = new ContentValues();
-        values.put(AccountConst.AccountEntry.COLUMN_NAME_ACCOUNT_NO,account.getAccountNo());
-        values.put(AccountConst.AccountEntry.COLUMN_NAME_ACCOUNT_HOLDER_NAME,account.getAccountHolderName());
-        values.put(AccountConst.AccountEntry.COLUMN_NAME_BANK_NAME,account.getBankName());
-        values.put(AccountConst.AccountEntry.COLUMN_NAME_BALANCE,account.getBalance());
+            db.insert(AccountConst.AccountEntry.TABLE_NAME,null,values);
 
-        db.insert(AccountConst.AccountEntry.TABLE_NAME,null,values);
+        }
+        else{
+
+            AlertDialog alert=new AlertDialog.Builder(context).create();
+            alert.setTitle("alert");
+            alert.setMessage("Account with this account number already exists");
+            alert.setCanceledOnTouchOutside(true);
+            alert.show();
+
+        }
+
 
     }
 

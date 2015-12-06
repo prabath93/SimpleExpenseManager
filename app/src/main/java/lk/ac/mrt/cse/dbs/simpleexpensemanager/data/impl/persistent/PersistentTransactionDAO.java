@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import java.io.Serializable;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -18,7 +19,9 @@ import lk.ac.mrt.cse.dbs.simpleexpensemanager.data.model.Transaction;
 /**
  * Created by prabath s on 12/4/2015.
  */
-public class PersistentTransactionDAO implements TransactionDAO {
+
+//this class has been made serializable to avoid application crashing on home button
+public class PersistentTransactionDAO implements TransactionDAO,Serializable {
 
     private Context context;
 
